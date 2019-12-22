@@ -581,6 +581,7 @@ def sendPayload():
     # Expand out the payload path to handle any user-refrences.
     payload_path = os.path.expanduser(arguments.smash_payload)
     if not os.path.isfile(payload_path):
+        print(payload_path)
         print("Invalid payload path specified!")
         sys.exit(-1)
 
@@ -688,12 +689,13 @@ def sendPayload():
 # Read our arguments.
 parser = argparse.ArgumentParser(description='smashing kit for swiftyPayloadsNX')
 parser.add_argument('--find_dev', default=False, type=bool, help='tells the program to check device condition')
-parser.add_argument('--smash_payload', metavar='payload', default="NODIR", type=str, help='payload to smash')
-#parser.add_argument('-V', metavar='vendor_id', dest='vid', type=parse_usb_id, default=None, help='overrides the TegraRCM vendor ID')
-#parser.add_argument('-P', metavar='product_id', dest='pid', type=parse_usb_id, default=None, help='overrides the TegraRCM product ID')
-#parser.add_argument('--override-os', metavar='platform', dest='platform', type=str, default=None, help='overrides the detected OS; for advanced users only')
+parser.add_argument('--smash_payload', default="NODIR", type=str, help='payload to smash')
+parser.add_argument('-V', metavar='vendor_id', dest='vid', type=parse_usb_id, default=None, help='overrides the TegraRCM vendor ID')
+parser.add_argument('-P', metavar='product_id', dest='pid', type=parse_usb_id, default=None, help='overrides the TegraRCM product ID')
+parser.add_argument('--override-os', metavar='platform', dest='platform', type=str, default=None, help='overrides the detected OS; for advanced users only')
+parser.add_argument('-w', dest='wait', action='store_true', help='wait for an RCM connection if one isn\'t present')
 parser.add_argument('--relocator', metavar='binary', dest='relocator', type=str, default="%s/intermezzo.bin" % os.path.dirname(os.path.abspath(__file__)), help='provides the path to the intermezzo relocation stub')
-#parser.add_argument('--override-checks', dest='skip_checks', action='store_true', help="don't check for a supported controller; useful if you've patched your EHCI driver")
+parser.add_argument('--override-checks', dest='skip_checks', action='store_true', help="don't check for a supported controller; useful if you've patched your EHCI driver")
 #parser.add_argument('--allow-failed-id', dest='permissive_id', action='store_true', help="continue even if reading the device's ID fails; useful for development but not for end users")
 arguments = parser.parse_args()
 

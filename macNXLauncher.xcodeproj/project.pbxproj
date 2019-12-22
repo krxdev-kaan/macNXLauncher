@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB6AA91923AE35C4000DF6C5 /* SaveSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */; };
+		BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */; };
 		BB718A9F23AD73FD0090C846 /* USBDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB718A9E23AD73FD0090C846 /* USBDetector.swift */; };
 		BB9867FA23ABCD860058F6F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9867F923ABCD860058F6F8 /* AppDelegate.swift */; };
 		BB9867FC23ABCD860058F6F8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9867FB23ABCD860058F6F8 /* ViewController.swift */; };
@@ -15,6 +17,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveSystem.swift; sourceTree = "<group>"; };
+		BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadObj.swift; sourceTree = "<group>"; };
 		BB718A9E23AD73FD0090C846 /* USBDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBDetector.swift; sourceTree = "<group>"; };
 		BB9867F623ABCD860058F6F8 /* macNXLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macNXLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB9867F923ABCD860058F6F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -57,11 +61,13 @@
 			children = (
 				BB9867F923ABCD860058F6F8 /* AppDelegate.swift */,
 				BB9867FB23ABCD860058F6F8 /* ViewController.swift */,
+				BB718A9E23AD73FD0090C846 /* USBDetector.swift */,
+				BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */,
+				BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */,
 				BB9867FD23ABCD870058F6F8 /* Assets.xcassets */,
 				BB9867FF23ABCD870058F6F8 /* Main.storyboard */,
 				BB98680223ABCD870058F6F8 /* Info.plist */,
 				BB98680323ABCD870058F6F8 /* macNXLauncher.entitlements */,
-				BB718A9E23AD73FD0090C846 /* USBDetector.swift */,
 			);
 			path = macNXLauncher;
 			sourceTree = "<group>";
@@ -137,8 +143,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB9867FC23ABCD860058F6F8 /* ViewController.swift in Sources */,
+				BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */,
 				BB718A9F23AD73FD0090C846 /* USBDetector.swift in Sources */,
 				BB9867FA23ABCD860058F6F8 /* AppDelegate.swift in Sources */,
+				BB6AA91923AE35C4000DF6C5 /* SaveSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,7 +214,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -260,7 +268,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
