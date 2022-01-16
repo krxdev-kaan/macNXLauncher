@@ -148,7 +148,7 @@ class ViewController: NSViewController {
         print("passed all possible errors")
         
         let process = Process()
-        process.launchPath = "/Library/Frameworks/Python.framework/Versions/3.8/bin/python3"
+        process.launchPath = "/usr/bin/python3"
         process.currentDirectoryPath = pathToFusee
         process.arguments = ["fusee-launcher.py", "--smash_payload", payload.directory!]
         process.terminationHandler = { (process) in
