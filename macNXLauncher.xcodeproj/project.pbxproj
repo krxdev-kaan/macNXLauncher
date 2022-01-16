@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB486CEF2794824700813CF4 /* USBBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB486CEE2794824700813CF4 /* USBBackend.swift */; };
+		BB486CF22794844900813CF4 /* USBDeviceSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BB486CF12794844900813CF4 /* USBDeviceSwift */; };
 		BB6AA91923AE35C4000DF6C5 /* SaveSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */; };
 		BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */; };
 		BB718A9F23AD73FD0090C846 /* USBDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB718A9E23AD73FD0090C846 /* USBDetector.swift */; };
@@ -17,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB486CEE2794824700813CF4 /* USBBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBBackend.swift; sourceTree = "<group>"; };
 		BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveSystem.swift; sourceTree = "<group>"; };
 		BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadObj.swift; sourceTree = "<group>"; };
 		BB718A9E23AD73FD0090C846 /* USBDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBDetector.swift; sourceTree = "<group>"; };
@@ -34,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB486CF22794844900813CF4 /* USBDeviceSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -68,6 +72,7 @@
 				BB9867FF23ABCD870058F6F8 /* Main.storyboard */,
 				BB98680223ABCD870058F6F8 /* Info.plist */,
 				BB98680323ABCD870058F6F8 /* macNXLauncher.entitlements */,
+				BB486CEE2794824700813CF4 /* USBBackend.swift */,
 			);
 			path = macNXLauncher;
 			sourceTree = "<group>";
@@ -88,6 +93,9 @@
 			dependencies = (
 			);
 			name = macNXLauncher;
+			packageProductDependencies = (
+				BB486CF12794844900813CF4 /* USBDeviceSwift */,
+			);
 			productName = macNXLauncher;
 			productReference = BB9867F623ABCD860058F6F8 /* macNXLauncher.app */;
 			productType = "com.apple.product-type.application";
@@ -116,6 +124,9 @@
 				Base,
 			);
 			mainGroup = BB9867ED23ABCD860058F6F8;
+			packageReferences = (
+				BB486CF02794844900813CF4 /* XCRemoteSwiftPackageReference "USBDeviceSwift" */,
+			);
 			productRefGroup = BB9867F723ABCD860058F6F8 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -143,6 +154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BB9867FC23ABCD860058F6F8 /* ViewController.swift in Sources */,
+				BB486CEF2794824700813CF4 /* USBBackend.swift in Sources */,
 				BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */,
 				BB718A9F23AD73FD0090C846 /* USBDetector.swift in Sources */,
 				BB9867FA23ABCD860058F6F8 /* AppDelegate.swift in Sources */,
@@ -341,6 +353,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		BB486CF02794844900813CF4 /* XCRemoteSwiftPackageReference "USBDeviceSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Arti3DPlayer/USBDeviceSwift.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		BB486CF12794844900813CF4 /* USBDeviceSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB486CF02794844900813CF4 /* XCRemoteSwiftPackageReference "USBDeviceSwift" */;
+			productName = USBDeviceSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BB9867EE23ABCD860058F6F8 /* Project object */;
 }

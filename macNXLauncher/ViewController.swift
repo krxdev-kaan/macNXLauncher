@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import USBDeviceSwift
 import IOKit
 import IOKit.usb
 import IOKit.usb.IOUSBLib
@@ -18,9 +19,7 @@ class ViewController: NSViewController {
     @IBOutlet weak var payloadListHeader: NSTableHeaderView!
     @IBOutlet weak var payloadListView: NSTableView!
     
-    var nxChecker : USBWatcher!
     var pathToFusee : String!
-    
     var selectedPayload = -1
     
     override func viewDidLoad() {
@@ -28,21 +27,44 @@ class ViewController: NSViewController {
         pathToFusee = UserDefaults.standard.string(forKey: "fuseeDir") ?? ""
         fileDirectoryTextField.stringValue = pathToFusee
         
-        nxChecker = USBWatcher(delegate: self)
-        
         setupPayloadList()
-    }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
-        }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.devicePluggedIn), name: .USBDeviceConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.deviceRemoved), name: .USBDeviceDisconnected, object: nil)
     }
     
     func setupPayloadList()
     {
         payloadListView.delegate = self
         payloadListView.dataSource = self
+    }
+    
+    @objc func devicePluggedIn(notification: NSNotification)
+    {
+        guard let nobj = notification.object as? NSDictionary else {
+            return
+        }
+        guard let deviceInfo: USBDevice = nobj["device"] as? USBDevice else {
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.rcmStateView.color = NSColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
+        }
+    }
+
+    @objc func deviceRemoved(notification: NSNotification)
+    {
+        guard let nobj = notification.object as? NSDictionary else {
+            return
+        }
+        guard let deviceInfo: UInt64 = nobj["id"] as? UInt64 else {
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.rcmStateView.color = NSColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
+        }
     }
     
     @IBAction func browseForFusee(sender: AnyObject) {
@@ -235,18 +257,4 @@ extension ViewController: NSTableViewDataSource
     func tableView(_ tableView: NSTableView, shouldEdit tableColumn: NSTableColumn?, row: Int) -> Bool {
         return true
     }
-}
-
-extension ViewController: USBWatcherDelegate {
-    
-    func deviceAdded(_ device: io_object_t)
-    {
-        rcmStateView.color = NSColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
-    }
-
-    func deviceRemoved(_ device: io_object_t)
-    {
-        rcmStateView.color = NSColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
-    }
-    
 }
