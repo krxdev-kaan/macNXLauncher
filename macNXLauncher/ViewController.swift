@@ -47,7 +47,7 @@ class ViewController: NSViewController {
             return
         }
         
-        USBBackend.switchDevice = device
+        USBBackend.tegraDevice = device
         
         DispatchQueue.main.async {
             self.rcmStateView.color = NSColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
@@ -62,6 +62,8 @@ class ViewController: NSViewController {
         guard let _: UInt64 = nobj["id"] as? UInt64 else {
             return
         }
+        
+        USBBackend.tegraDevice = nil
         
         DispatchQueue.main.async {
             self.rcmStateView.color = NSColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
@@ -135,7 +137,7 @@ class ViewController: NSViewController {
     
     @IBAction func smashPayload(sender: AnyObject)
     {
-        guard let deviceInterface = USBBackend.switchDevice!.deviceInterfacePtrPtr?.pointee?.pointee else {
+        guard let deviceInterface = USBBackend.tegraDevice!.deviceInterfacePtrPtr?.pointee?.pointee else {
             return
         }
         
@@ -148,7 +150,7 @@ class ViewController: NSViewController {
             bInterfaceProtocol: UInt16(kIOUSBFindInterfaceDontCare),
             bAlternateSetting: UInt16(kIOUSBFindInterfaceDontCare)
         )
-        kr = deviceInterface.CreateInterfaceIterator(USBBackend.switchDevice!.deviceInterfacePtrPtr, &subIntfReq, &subIntf)
+        kr = deviceInterface.CreateInterfaceIterator(USBBackend.tegraDevice!.deviceInterfacePtrPtr, &subIntfReq, &subIntf)
         intfService = IOIteratorNext(subIntf)
         while(intfService != 0) {
             let intfnum: Unmanaged<CFTypeRef>! = IORegistryEntryCreateCFProperty(intfService, "bInterfaceNumber" as CFString, kCFAllocatorDefault, 0)
