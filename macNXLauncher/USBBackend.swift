@@ -10,9 +10,10 @@ import Foundation
 import USBDeviceSwift
 
 public class USBBackend {
-    static let nxVendorID : UInt16 = 0x0955
-    static let nxProductId : UInt16 = 0x7321
+    static let nxVendorID: UInt16 = 0x0955
+    static let nxProductId: UInt16 = 0x7321
     
+    static var switchDevice: USBDevice? = nil
     static let switchMonitor = USBDeviceMonitor([USBMonitorData(vendorId: nxVendorID, productId: nxProductId)])
     
     static func initializeSwitchMonitor() {

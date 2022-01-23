@@ -10,7 +10,6 @@ import Cocoa
 import USBDeviceSwift
 import IOKit
 import IOKit.usb
-import IOKit.usb.IOUSBLib
 
 class ViewController: NSViewController {
     @IBOutlet weak var fileDialogButton: NSButton!
@@ -44,9 +43,11 @@ class ViewController: NSViewController {
         guard let nobj = notification.object as? NSDictionary else {
             return
         }
-        guard let deviceInfo: USBDevice = nobj["device"] as? USBDevice else {
+        guard let device: USBDevice = nobj["device"] as? USBDevice else {
             return
         }
+        
+        USBBackend.switchDevice = device
         
         DispatchQueue.main.async {
             self.rcmStateView.color = NSColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
@@ -58,7 +59,7 @@ class ViewController: NSViewController {
         guard let nobj = notification.object as? NSDictionary else {
             return
         }
-        guard let deviceInfo: UInt64 = nobj["id"] as? UInt64 else {
+        guard let _: UInt64 = nobj["id"] as? UInt64 else {
             return
         }
         
@@ -134,49 +135,149 @@ class ViewController: NSViewController {
     
     @IBAction func smashPayload(sender: AnyObject)
     {
-        let payload = SaveSystem.retrieveAtIndex(index: selectedPayload)
-        if payload.directory == nil
-        {
-            print("sector1")
-            return
-        }
-        if selectedPayload == -1
-        {
-            print("sector2")
-            return
-        }
-        let fm = FileManager.default
-        if !fm.fileExists(atPath: payload.directory!)
-        {
-            print("sector3")
-            return
-        }
-        if !fm.fileExists(atPath: pathToFusee + "/intermezzo.bin")
-        {
-            print("sector4")
-            return
-        }
-        if !fm.fileExists(atPath: pathToFusee + "/fusee-launcher.py")
-        {
-            print("sector5")
-            return
-        }
-        if !fm.fileExists(atPath: pathToFusee + "/libusbK.py")
-        {
-            print("sector6")
+        guard let deviceInterface = USBBackend.switchDevice!.deviceInterfacePtrPtr?.pointee?.pointee else {
             return
         }
         
-        print("passed all possible errors")
-        
-        let process = Process()
-        process.launchPath = "/usr/bin/python3"
-        process.currentDirectoryPath = pathToFusee
-        process.arguments = ["fusee-launcher.py", "--smash_payload", payload.directory!]
-        process.terminationHandler = { (process) in
-            print(process.terminationStatus)
+        var kr : Int32 = 0
+        var intfService: io_service_t = 0
+        var subIntf: io_iterator_t = 0
+        var subIntfReq: IOUSBFindInterfaceRequest = IOUSBFindInterfaceRequest(
+            bInterfaceClass: UInt16(kIOUSBFindInterfaceDontCare),
+            bInterfaceSubClass: UInt16(kIOUSBFindInterfaceDontCare),
+            bInterfaceProtocol: UInt16(kIOUSBFindInterfaceDontCare),
+            bAlternateSetting: UInt16(kIOUSBFindInterfaceDontCare)
+        )
+        kr = deviceInterface.CreateInterfaceIterator(USBBackend.switchDevice!.deviceInterfacePtrPtr, &subIntfReq, &subIntf)
+        intfService = IOIteratorNext(subIntf)
+        while(intfService != 0) {
+            let intfnum: Unmanaged<CFTypeRef>! = IORegistryEntryCreateCFProperty(intfService, "bInterfaceNumber" as CFString, kCFAllocatorDefault, 0)
+            
+            if ((intfnum.takeUnretainedValue() as! NSNumber).int32Value == 0) {
+                break
+            }
+            
+            IOObjectRelease(intfService)
+            intfService = IOIteratorNext(subIntf)
         }
-        process.launch()
+        
+        var plugin: UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?
+        var interface: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBInterfaceInterface>?>?
+        var score: Int32 = 0
+        var vid:UInt16 = 0
+        var pid:UInt16 = 0
+        
+        let kIOUSBInterfaceUserClientTypeID: CFUUID! =  CFUUIDGetConstantUUIDWithBytes(
+            nil,
+            0x2d, 0x97, 0x86, 0xc6, 0x9e,
+            0xf3, 0x11, 0xD4, 0xad, 0x51,
+            0x00, 0x0a, 0x27, 0x05, 0x28,
+            0x61
+        )
+        
+        kr = IOCreatePlugInInterfaceForService(
+            intfService,
+            kIOUSBInterfaceUserClientTypeID,
+            kIOCFPlugInInterfaceID,
+            &plugin,
+            &score
+        )
+        
+        guard let plugInInterface = plugin?.pointee?.pointee else {
+            print("Unable to get Plug-In Interface")
+            return
+        }
+        
+        let kIOUSBInterfaceInterfaceID: CFUUID! = CFUUIDGetConstantUUIDWithBytes(
+            kCFAllocatorSystemDefault,
+            0x87, 0x52, 0x66, 0x3B, 0xC0,
+            0x7B, 0x4B, 0xAE, 0x95, 0x84,
+            0x22, 0x03, 0x2F, 0xAB, 0x9C,
+            0x5A
+        )
+        
+        kr = withUnsafeMutablePointer(to: &interface) {
+           $0.withMemoryRebound(to: Optional<LPVOID>.self, capacity: 1) {
+               plugInInterface.QueryInterface(
+                   plugin,
+                   CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID),
+                   $0)
+           }
+        }
+        
+        plugInInterface.Release(plugin)
+        
+        guard let interfaceZero = interface?.pointee?.pointee else {
+            print("Unable to get Device Interface")
+            return
+        }
+        
+        kr = interfaceZero.USBInterfaceOpen(interface)
+        
+        kr = interfaceZero.GetDeviceVendor(interface, &vid)
+        if (kr != kIOReturnSuccess) {
+            print("Unable to get Device PID")
+            return
+        }
+        
+        kr = interfaceZero.GetDeviceProduct(interface, &pid)
+        if (kr != kIOReturnSuccess) {
+            print("Unable to get Device VID")
+            return
+        }
+        
+        var readPipeRef: UInt8 = 0
+        var writePipeRef: UInt8 = 0
+        
+        var numEndpoints: UInt8 = 0
+        
+        kr = interfaceZero.GetNumEndpoints(interface, &numEndpoints)
+        if (kr == kIOReturnSuccess) {
+            for pipeRef in 1...numEndpoints {
+                var direction: UInt8 = 0
+                var num: UInt8 = 0
+                var transferType: UInt8 = 0
+                var maxPacketSize: UInt16 = 0
+                var interval: UInt8 = 0
+                
+                kr = interfaceZero.GetPipeProperties(
+                    interface,
+                    pipeRef,
+                    &direction,
+                    &num,
+                    &transferType,
+                    &maxPacketSize,
+                    &interval
+                )
+                
+                if (kr == kIOReturnSuccess) {
+                    if (readPipeRef == 0 && transferType == kUSBBulk && direction == kUSBIn) {
+                        readPipeRef = pipeRef
+                    }
+                    if (writePipeRef == 0 && transferType == kUSBBulk && direction == kUSBOut) {
+                        writePipeRef = pipeRef
+                    }
+                }
+            }
+        }
+        
+        var buffer: [UInt8] = [UInt8](repeating: 0, count: 16)
+        var length: UInt32 = UInt32(buffer.count)
+        
+        kr = interfaceZero.ReadPipe(
+            interface,
+            readPipeRef,
+            &buffer,
+            &length
+        )
+        if (kr == kIOReturnSuccess) {
+            print(buffer)
+        } else {
+            print("Error while reading device id")
+        }
+        
+        kr = interfaceZero.USBInterfaceClose(interface)
+        interfaceZero.Release(interface)
     }
 }
 

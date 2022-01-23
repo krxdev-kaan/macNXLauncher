@@ -564,6 +564,23 @@ def parse_usb_id(id):
     """ Quick function to parse VID/PID arguments. """
     return int(id, 16)
 
+def testDeviceId():
+    try:
+        switch = RCMHax(wait_for_device=arguments.wait, vid=arguments.vid, 
+                pid=arguments.pid, os_override=arguments.platform, override_checks=arguments.skip_checks)
+    except IOError as e:
+        print(e)
+        sys.exit(-1)
+
+    # Print the device's ID. Note that reading the device's ID is necessary to get it into
+    try:
+        device_id = switch.read_device_id()
+        print(device_id)
+    except OSError as e:
+        # Raise the exception only if we're not being permissive about ID reads.
+        if not arguments.permissive_id:
+            raise e
+
 def updateState():
     backend = HaxBackend.create_appropriate_backend()
     device = backend.find_device(0x0955, 0x7321)
@@ -585,7 +602,7 @@ def sendPayload():
         print("Invalid payload path specified!")
         sys.exit(-1)
 
-# Find our intermezzo relocator...
+    # Find our intermezzo relocator...
     intermezzo_path = os.path.expanduser(arguments.relocator)
     if not os.path.isfile(intermezzo_path):
         print("Could not find the intermezzo interposer. Did you build it?")
@@ -690,6 +707,7 @@ def sendPayload():
 parser = argparse.ArgumentParser(description='smashing kit for swiftyPayloadsNX')
 parser.add_argument('--find_dev', default=False, type=bool, help='tells the program to check device condition')
 parser.add_argument('--smash_payload', default="NODIR", type=str, help='payload to smash')
+parser.add_argument('--test_switch_id', default="NO", type=str, help="tells the program to return the device id and return")
 parser.add_argument('-V', metavar='vendor_id', dest='vid', type=parse_usb_id, default=None, help='overrides the TegraRCM vendor ID')
 parser.add_argument('-P', metavar='product_id', dest='pid', type=parse_usb_id, default=None, help='overrides the TegraRCM product ID')
 parser.add_argument('--override-os', metavar='platform', dest='platform', type=str, default=None, help='overrides the detected OS; for advanced users only')
@@ -698,6 +716,10 @@ parser.add_argument('--relocator', metavar='binary', dest='relocator', type=str,
 parser.add_argument('--override-checks', dest='skip_checks', action='store_true', help="don't check for a supported controller; useful if you've patched your EHCI driver")
 #parser.add_argument('--allow-failed-id', dest='permissive_id', action='store_true', help="continue even if reading the device's ID fails; useful for development but not for end users")
 arguments = parser.parse_args()
+
+# if arguments.test_switch_id == "YES":
+#    testDeviceId()
+#    sys.exit(1)
 
 if arguments.find_dev == True:
     updateState()

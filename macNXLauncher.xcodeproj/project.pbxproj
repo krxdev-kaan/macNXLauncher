@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		BB486CEF2794824700813CF4 /* USBBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB486CEE2794824700813CF4 /* USBBackend.swift */; };
-		BB486CF22794844900813CF4 /* USBDeviceSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BB486CF12794844900813CF4 /* USBDeviceSwift */; };
 		BB6AA91923AE35C4000DF6C5 /* SaveSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */; };
 		BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */; };
 		BB718A9F23AD73FD0090C846 /* USBDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB718A9E23AD73FD0090C846 /* USBDetector.swift */; };
@@ -16,6 +15,7 @@
 		BB9867FC23ABCD860058F6F8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9867FB23ABCD860058F6F8 /* ViewController.swift */; };
 		BB9867FE23ABCD870058F6F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB9867FD23ABCD870058F6F8 /* Assets.xcassets */; };
 		BB98680123ABCD870058F6F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB9867FF23ABCD870058F6F8 /* Main.storyboard */; };
+		BBB2972D279899EB0068876D /* USBDeviceSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BBB2972C279899EB0068876D /* USBDeviceSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,7 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BB486CF22794844900813CF4 /* USBDeviceSwift in Frameworks */,
+				BBB2972D279899EB0068876D /* USBDeviceSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +94,7 @@
 			);
 			name = macNXLauncher;
 			packageProductDependencies = (
-				BB486CF12794844900813CF4 /* USBDeviceSwift */,
+				BBB2972C279899EB0068876D /* USBDeviceSwift */,
 			);
 			productName = macNXLauncher;
 			productReference = BB9867F623ABCD860058F6F8 /* macNXLauncher.app */;
@@ -125,7 +125,7 @@
 			);
 			mainGroup = BB9867ED23ABCD860058F6F8;
 			packageReferences = (
-				BB486CF02794844900813CF4 /* XCRemoteSwiftPackageReference "USBDeviceSwift" */,
+				BBB2972B279899EB0068876D /* XCRemoteSwiftPackageReference "USBDeviceSwift" */,
 			);
 			productRefGroup = BB9867F723ABCD860058F6F8 /* Products */;
 			projectDirPath = "";
@@ -355,7 +355,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		BB486CF02794844900813CF4 /* XCRemoteSwiftPackageReference "USBDeviceSwift" */ = {
+		BBB2972B279899EB0068876D /* XCRemoteSwiftPackageReference "USBDeviceSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Arti3DPlayer/USBDeviceSwift.git";
 			requirement = {
@@ -366,9 +366,9 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		BB486CF12794844900813CF4 /* USBDeviceSwift */ = {
+		BBB2972C279899EB0068876D /* USBDeviceSwift */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = BB486CF02794844900813CF4 /* XCRemoteSwiftPackageReference "USBDeviceSwift" */;
+			package = BBB2972B279899EB0068876D /* XCRemoteSwiftPackageReference "USBDeviceSwift" */;
 			productName = USBDeviceSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
