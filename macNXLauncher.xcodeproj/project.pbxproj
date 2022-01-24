@@ -48,6 +48,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BB537D03279F1F0E00B326BE /* SaveSystem */ = {
+			isa = PBXGroup;
+			children = (
+				BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */,
+				BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */,
+			);
+			path = SaveSystem;
+			sourceTree = "<group>";
+		};
 		BB9867ED23ABCD860058F6F8 = {
 			isa = PBXGroup;
 			children = (
@@ -67,11 +76,10 @@
 		BB9867F823ABCD860058F6F8 /* macNXLauncher */ = {
 			isa = PBXGroup;
 			children = (
+				BB537D03279F1F0E00B326BE /* SaveSystem */,
 				BBD25385279E1B1100FD6621 /* NXUSBLib */,
 				BB9867F923ABCD860058F6F8 /* AppDelegate.swift */,
 				BB9867FB23ABCD860058F6F8 /* ViewController.swift */,
-				BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */,
-				BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */,
 				BB9867FD23ABCD870058F6F8 /* Assets.xcassets */,
 				BB9867FF23ABCD870058F6F8 /* Main.storyboard */,
 				BB98680223ABCD870058F6F8 /* Info.plist */,
