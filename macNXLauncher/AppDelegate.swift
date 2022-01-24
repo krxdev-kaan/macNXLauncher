@@ -12,7 +12,9 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
-        USBBackend.initializeSwitchMonitor()
+        DispatchQueue.global().async {
+            USBBackend.initializeTegraMonitor()
+        }
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

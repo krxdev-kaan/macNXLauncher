@@ -28,8 +28,8 @@ class ViewController: NSViewController {
         
         setupPayloadList()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.devicePluggedIn), name: .USBDeviceConnected, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.deviceRemoved), name: .USBDeviceDisconnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.devicePluggedIn), name: .TegraDeviceConnected, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.deviceRemoved), name: .TegraDeviceDisconnected, object: nil)
     }
     
     func setupPayloadList()
@@ -40,15 +40,6 @@ class ViewController: NSViewController {
     
     @objc func devicePluggedIn(notification: NSNotification)
     {
-        guard let nobj = notification.object as? NSDictionary else {
-            return
-        }
-        guard let device: USBDevice = nobj["device"] as? USBDevice else {
-            return
-        }
-        
-        USBBackend.tegraDevice = device
-        
         DispatchQueue.main.async {
             self.rcmStateView.color = NSColor(red: 0.0, green: 0.7, blue: 0.0, alpha: 1.0)
         }
@@ -56,15 +47,6 @@ class ViewController: NSViewController {
 
     @objc func deviceRemoved(notification: NSNotification)
     {
-        guard let nobj = notification.object as? NSDictionary else {
-            return
-        }
-        guard let _: UInt64 = nobj["id"] as? UInt64 else {
-            return
-        }
-        
-        USBBackend.tegraDevice = nil
-        
         DispatchQueue.main.async {
             self.rcmStateView.color = NSColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
         }
@@ -137,149 +119,151 @@ class ViewController: NSViewController {
     
     @IBAction func smashPayload(sender: AnyObject)
     {
-        guard let deviceInterface = USBBackend.tegraDevice!.deviceInterfacePtrPtr?.pointee?.pointee else {
-            return
-        }
-        
-        var kr : Int32 = 0
-        var intfService: io_service_t = 0
-        var subIntf: io_iterator_t = 0
-        var subIntfReq: IOUSBFindInterfaceRequest = IOUSBFindInterfaceRequest(
-            bInterfaceClass: UInt16(kIOUSBFindInterfaceDontCare),
-            bInterfaceSubClass: UInt16(kIOUSBFindInterfaceDontCare),
-            bInterfaceProtocol: UInt16(kIOUSBFindInterfaceDontCare),
-            bAlternateSetting: UInt16(kIOUSBFindInterfaceDontCare)
-        )
-        kr = deviceInterface.CreateInterfaceIterator(USBBackend.tegraDevice!.deviceInterfacePtrPtr, &subIntfReq, &subIntf)
-        intfService = IOIteratorNext(subIntf)
-        while(intfService != 0) {
-            let intfnum: Unmanaged<CFTypeRef>! = IORegistryEntryCreateCFProperty(intfService, "bInterfaceNumber" as CFString, kCFAllocatorDefault, 0)
-            
-            if ((intfnum.takeUnretainedValue() as! NSNumber).int32Value == 0) {
-                break
+        /*
+            guard let deviceInterface = USBBackend.tegraDevice!.deviceInterfacePtrPtr?.pointee?.pointee else {
+                return
             }
             
-            IOObjectRelease(intfService)
+            var kr : Int32 = 0
+            var intfService: io_service_t = 0
+            var subIntf: io_iterator_t = 0
+            var subIntfReq: IOUSBFindInterfaceRequest = IOUSBFindInterfaceRequest(
+                bInterfaceClass: UInt16(kIOUSBFindInterfaceDontCare),
+                bInterfaceSubClass: UInt16(kIOUSBFindInterfaceDontCare),
+                bInterfaceProtocol: UInt16(kIOUSBFindInterfaceDontCare),
+                bAlternateSetting: UInt16(kIOUSBFindInterfaceDontCare)
+            )
+            kr = deviceInterface.CreateInterfaceIterator(USBBackend.tegraDevice!.deviceInterfacePtrPtr, &subIntfReq, &subIntf)
             intfService = IOIteratorNext(subIntf)
-        }
-        
-        var plugin: UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?
-        var interface: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBInterfaceInterface>?>?
-        var score: Int32 = 0
-        var vid:UInt16 = 0
-        var pid:UInt16 = 0
-        
-        let kIOUSBInterfaceUserClientTypeID: CFUUID! =  CFUUIDGetConstantUUIDWithBytes(
-            nil,
-            0x2d, 0x97, 0x86, 0xc6, 0x9e,
-            0xf3, 0x11, 0xD4, 0xad, 0x51,
-            0x00, 0x0a, 0x27, 0x05, 0x28,
-            0x61
-        )
-        
-        kr = IOCreatePlugInInterfaceForService(
-            intfService,
-            kIOUSBInterfaceUserClientTypeID,
-            kIOCFPlugInInterfaceID,
-            &plugin,
-            &score
-        )
-        
-        guard let plugInInterface = plugin?.pointee?.pointee else {
-            print("Unable to get Plug-In Interface")
-            return
-        }
-        
-        let kIOUSBInterfaceInterfaceID: CFUUID! = CFUUIDGetConstantUUIDWithBytes(
-            kCFAllocatorSystemDefault,
-            0x87, 0x52, 0x66, 0x3B, 0xC0,
-            0x7B, 0x4B, 0xAE, 0x95, 0x84,
-            0x22, 0x03, 0x2F, 0xAB, 0x9C,
-            0x5A
-        )
-        
-        kr = withUnsafeMutablePointer(to: &interface) {
-           $0.withMemoryRebound(to: Optional<LPVOID>.self, capacity: 1) {
-               plugInInterface.QueryInterface(
-                   plugin,
-                   CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID),
-                   $0)
-           }
-        }
-        
-        plugInInterface.Release(plugin)
-        
-        guard let interfaceZero = interface?.pointee?.pointee else {
-            print("Unable to get Device Interface")
-            return
-        }
-        
-        kr = interfaceZero.USBInterfaceOpen(interface)
-        
-        kr = interfaceZero.GetDeviceVendor(interface, &vid)
-        if (kr != kIOReturnSuccess) {
-            print("Unable to get Device PID")
-            return
-        }
-        
-        kr = interfaceZero.GetDeviceProduct(interface, &pid)
-        if (kr != kIOReturnSuccess) {
-            print("Unable to get Device VID")
-            return
-        }
-        
-        var readPipeRef: UInt8 = 0
-        var writePipeRef: UInt8 = 0
-        
-        var numEndpoints: UInt8 = 0
-        
-        kr = interfaceZero.GetNumEndpoints(interface, &numEndpoints)
-        if (kr == kIOReturnSuccess) {
-            for pipeRef in 1...numEndpoints {
-                var direction: UInt8 = 0
-                var num: UInt8 = 0
-                var transferType: UInt8 = 0
-                var maxPacketSize: UInt16 = 0
-                var interval: UInt8 = 0
+            while(intfService != 0) {
+                let intfnum: Unmanaged<CFTypeRef>! = IORegistryEntryCreateCFProperty(intfService, "bInterfaceNumber" as CFString, kCFAllocatorDefault, 0)
                 
-                kr = interfaceZero.GetPipeProperties(
-                    interface,
-                    pipeRef,
-                    &direction,
-                    &num,
-                    &transferType,
-                    &maxPacketSize,
-                    &interval
-                )
+                if ((intfnum.takeUnretainedValue() as! NSNumber).int32Value == 0) {
+                    break
+                }
                 
-                if (kr == kIOReturnSuccess) {
-                    if (readPipeRef == 0 && transferType == kUSBBulk && direction == kUSBIn) {
-                        readPipeRef = pipeRef
-                    }
-                    if (writePipeRef == 0 && transferType == kUSBBulk && direction == kUSBOut) {
-                        writePipeRef = pipeRef
+                IOObjectRelease(intfService)
+                intfService = IOIteratorNext(subIntf)
+            }
+            
+            var plugin: UnsafeMutablePointer<UnsafeMutablePointer<IOCFPlugInInterface>?>?
+            var interface: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBInterfaceInterface>?>?
+            var score: Int32 = 0
+            var vid:UInt16 = 0
+            var pid:UInt16 = 0
+            
+            let kIOUSBInterfaceUserClientTypeID: CFUUID! =  CFUUIDGetConstantUUIDWithBytes(
+                nil,
+                0x2d, 0x97, 0x86, 0xc6, 0x9e,
+                0xf3, 0x11, 0xD4, 0xad, 0x51,
+                0x00, 0x0a, 0x27, 0x05, 0x28,
+                0x61
+            )
+            
+            kr = IOCreatePlugInInterfaceForService(
+                intfService,
+                kIOUSBInterfaceUserClientTypeID,
+                kIOCFPlugInInterfaceID,
+                &plugin,
+                &score
+            )
+            
+            guard let plugInInterface = plugin?.pointee?.pointee else {
+                print("Unable to get Plug-In Interface")
+                return
+            }
+            
+            let kIOUSBInterfaceInterfaceID: CFUUID! = CFUUIDGetConstantUUIDWithBytes(
+                kCFAllocatorSystemDefault,
+                0x87, 0x52, 0x66, 0x3B, 0xC0,
+                0x7B, 0x4B, 0xAE, 0x95, 0x84,
+                0x22, 0x03, 0x2F, 0xAB, 0x9C,
+                0x5A
+            )
+            
+            kr = withUnsafeMutablePointer(to: &interface) {
+               $0.withMemoryRebound(to: Optional<LPVOID>.self, capacity: 1) {
+                   plugInInterface.QueryInterface(
+                       plugin,
+                       CFUUIDGetUUIDBytes(kIOUSBInterfaceInterfaceID),
+                       $0)
+               }
+            }
+            
+            plugInInterface.Release(plugin)
+            
+            guard let interfaceZero = interface?.pointee?.pointee else {
+                print("Unable to get Device Interface")
+                return
+            }
+            
+            kr = interfaceZero.USBInterfaceOpen(interface)
+            
+            kr = interfaceZero.GetDeviceVendor(interface, &vid)
+            if (kr != kIOReturnSuccess) {
+                print("Unable to get Device PID")
+                return
+            }
+            
+            kr = interfaceZero.GetDeviceProduct(interface, &pid)
+            if (kr != kIOReturnSuccess) {
+                print("Unable to get Device VID")
+                return
+            }
+            
+            var readPipeRef: UInt8 = 0
+            var writePipeRef: UInt8 = 0
+            
+            var numEndpoints: UInt8 = 0
+            
+            kr = interfaceZero.GetNumEndpoints(interface, &numEndpoints)
+            if (kr == kIOReturnSuccess) {
+                for pipeRef in 1...numEndpoints {
+                    var direction: UInt8 = 0
+                    var num: UInt8 = 0
+                    var transferType: UInt8 = 0
+                    var maxPacketSize: UInt16 = 0
+                    var interval: UInt8 = 0
+                    
+                    kr = interfaceZero.GetPipeProperties(
+                        interface,
+                        pipeRef,
+                        &direction,
+                        &num,
+                        &transferType,
+                        &maxPacketSize,
+                        &interval
+                    )
+                    
+                    if (kr == kIOReturnSuccess) {
+                        if (readPipeRef == 0 && transferType == kUSBBulk && direction == kUSBIn) {
+                            readPipeRef = pipeRef
+                        }
+                        if (writePipeRef == 0 && transferType == kUSBBulk && direction == kUSBOut) {
+                            writePipeRef = pipeRef
+                        }
                     }
                 }
             }
-        }
-        
-        var buffer: [UInt8] = [UInt8](repeating: 0, count: 16)
-        var length: UInt32 = UInt32(buffer.count)
-        
-        kr = interfaceZero.ReadPipe(
-            interface,
-            readPipeRef,
-            &buffer,
-            &length
-        )
-        if (kr == kIOReturnSuccess) {
-            print(buffer)
-        } else {
-            print("Error while reading device id")
-        }
-        
-        kr = interfaceZero.USBInterfaceClose(interface)
-        interfaceZero.Release(interface)
+            
+            var buffer: [UInt8] = [UInt8](repeating: 0, count: 16)
+            var length: UInt32 = UInt32(buffer.count)
+            
+            kr = interfaceZero.ReadPipe(
+                interface,
+                readPipeRef,
+                &buffer,
+                &length
+            )
+            if (kr == kIOReturnSuccess) {
+                print(buffer)
+            } else {
+                print("Error while reading device id")
+            }
+            
+            kr = interfaceZero.USBInterfaceClose(interface)
+            interfaceZero.Release(interface)
+        */
     }
 }
 

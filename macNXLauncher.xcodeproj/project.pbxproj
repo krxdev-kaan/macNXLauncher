@@ -3,26 +3,29 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		BB486CEF2794824700813CF4 /* USBBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB486CEE2794824700813CF4 /* USBBackend.swift */; };
+		BB537D00279EE53800B326BE /* TegraDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB537CFF279EE53800B326BE /* TegraDevice.swift */; };
+		BB537D02279EE81900B326BE /* USBDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB537D01279EE81900B326BE /* USBDevice.swift */; };
 		BB6AA91923AE35C4000DF6C5 /* SaveSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */; };
 		BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */; };
-		BB718A9F23AD73FD0090C846 /* USBDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB718A9E23AD73FD0090C846 /* USBDetector.swift */; };
 		BB9867FA23ABCD860058F6F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9867F923ABCD860058F6F8 /* AppDelegate.swift */; };
 		BB9867FC23ABCD860058F6F8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9867FB23ABCD860058F6F8 /* ViewController.swift */; };
 		BB9867FE23ABCD870058F6F8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB9867FD23ABCD870058F6F8 /* Assets.xcassets */; };
 		BB98680123ABCD870058F6F8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB9867FF23ABCD870058F6F8 /* Main.storyboard */; };
-		BBB2972D279899EB0068876D /* USBDeviceSwift in Frameworks */ = {isa = PBXBuildFile; productRef = BBB2972C279899EB0068876D /* USBDeviceSwift */; };
+		BBD25387279E1B8A00FD6621 /* USBUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD25386279E1B8A00FD6621 /* USBUtils.swift */; };
+		BBD25389279E1B9500FD6621 /* USBConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBD25388279E1B9500FD6621 /* USBConstants.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		BB486CEE2794824700813CF4 /* USBBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBBackend.swift; sourceTree = "<group>"; };
+		BB537CFF279EE53800B326BE /* TegraDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TegraDevice.swift; sourceTree = "<group>"; };
+		BB537D01279EE81900B326BE /* USBDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBDevice.swift; sourceTree = "<group>"; };
 		BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveSystem.swift; sourceTree = "<group>"; };
 		BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadObj.swift; sourceTree = "<group>"; };
-		BB718A9E23AD73FD0090C846 /* USBDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBDetector.swift; sourceTree = "<group>"; };
 		BB9867F623ABCD860058F6F8 /* macNXLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macNXLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB9867F923ABCD860058F6F8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB9867FB23ABCD860058F6F8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -30,6 +33,8 @@
 		BB98680023ABCD870058F6F8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		BB98680223ABCD870058F6F8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BB98680323ABCD870058F6F8 /* macNXLauncher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macNXLauncher.entitlements; sourceTree = "<group>"; };
+		BBD25386279E1B8A00FD6621 /* USBUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBUtils.swift; sourceTree = "<group>"; };
+		BBD25388279E1B9500FD6621 /* USBConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBConstants.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,7 +42,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BBB2972D279899EB0068876D /* USBDeviceSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -63,18 +67,29 @@
 		BB9867F823ABCD860058F6F8 /* macNXLauncher */ = {
 			isa = PBXGroup;
 			children = (
+				BBD25385279E1B1100FD6621 /* NXUSBLib */,
 				BB9867F923ABCD860058F6F8 /* AppDelegate.swift */,
 				BB9867FB23ABCD860058F6F8 /* ViewController.swift */,
-				BB718A9E23AD73FD0090C846 /* USBDetector.swift */,
 				BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */,
 				BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */,
 				BB9867FD23ABCD870058F6F8 /* Assets.xcassets */,
 				BB9867FF23ABCD870058F6F8 /* Main.storyboard */,
 				BB98680223ABCD870058F6F8 /* Info.plist */,
 				BB98680323ABCD870058F6F8 /* macNXLauncher.entitlements */,
-				BB486CEE2794824700813CF4 /* USBBackend.swift */,
 			);
 			path = macNXLauncher;
+			sourceTree = "<group>";
+		};
+		BBD25385279E1B1100FD6621 /* NXUSBLib */ = {
+			isa = PBXGroup;
+			children = (
+				BB486CEE2794824700813CF4 /* USBBackend.swift */,
+				BBD25386279E1B8A00FD6621 /* USBUtils.swift */,
+				BBD25388279E1B9500FD6621 /* USBConstants.swift */,
+				BB537CFF279EE53800B326BE /* TegraDevice.swift */,
+				BB537D01279EE81900B326BE /* USBDevice.swift */,
+			);
+			path = NXUSBLib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -94,7 +109,6 @@
 			);
 			name = macNXLauncher;
 			packageProductDependencies = (
-				BBB2972C279899EB0068876D /* USBDeviceSwift */,
 			);
 			productName = macNXLauncher;
 			productReference = BB9867F623ABCD860058F6F8 /* macNXLauncher.app */;
@@ -125,7 +139,6 @@
 			);
 			mainGroup = BB9867ED23ABCD860058F6F8;
 			packageReferences = (
-				BBB2972B279899EB0068876D /* XCRemoteSwiftPackageReference "USBDeviceSwift" */,
 			);
 			productRefGroup = BB9867F723ABCD860058F6F8 /* Products */;
 			projectDirPath = "";
@@ -156,8 +169,11 @@
 				BB9867FC23ABCD860058F6F8 /* ViewController.swift in Sources */,
 				BB486CEF2794824700813CF4 /* USBBackend.swift in Sources */,
 				BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */,
-				BB718A9F23AD73FD0090C846 /* USBDetector.swift in Sources */,
+				BBD25387279E1B8A00FD6621 /* USBUtils.swift in Sources */,
+				BBD25389279E1B9500FD6621 /* USBConstants.swift in Sources */,
+				BB537D02279EE81900B326BE /* USBDevice.swift in Sources */,
 				BB9867FA23ABCD860058F6F8 /* AppDelegate.swift in Sources */,
+				BB537D00279EE53800B326BE /* TegraDevice.swift in Sources */,
 				BB6AA91923AE35C4000DF6C5 /* SaveSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -353,25 +369,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		BBB2972B279899EB0068876D /* XCRemoteSwiftPackageReference "USBDeviceSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Arti3DPlayer/USBDeviceSwift.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		BBB2972C279899EB0068876D /* USBDeviceSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BBB2972B279899EB0068876D /* XCRemoteSwiftPackageReference "USBDeviceSwift" */;
-			productName = USBDeviceSwift;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BB9867EE23ABCD860058F6F8 /* Project object */;
 }
