@@ -106,14 +106,14 @@ public class USBDevice {
         print("USBDevice: Claimed Interface.")
     }
     
-    static func read (endpointPipeRef: UInt8, returnBuffer: inout [UInt8], len: Int) {
+    static func read (endpointPipeRef: UInt8, returnBuffer: inout [UInt8], len: Int) -> Bool {
         var kr: Int32 = 0
         var buffer: [UInt8] = [UInt8](repeating: 0, count: len)
         var length: UInt32 = UInt32(buffer.count)
         
         if (USBBackend.tegraInterfaceInterface == nil) {
             print("USBDevice: USBBackend didn't acquire the InterfaceInterface yet...")
-            return
+            return false
         }
         kr = USBBackend.tegraInterfaceInterface!.ReadPipe(
             USBBackend.tegraInterfaceInterfacePtrPtr,
@@ -123,9 +123,32 @@ public class USBDevice {
         )
         if (!KernelSucceeded(kernelReturn: kr)) {
             print("USBDevice: Failed to read. Error code: \(kr)")
-            return
+            return false
         }
         
         returnBuffer = buffer
+        return true
+    }
+    
+    static func write (endpointPipeRef: UInt8, bufferToWrite: [UInt8]) -> Bool {
+        var kr: Int32 = 0
+        var buffer: [UInt8] = bufferToWrite
+        
+        if (USBBackend.tegraInterfaceInterface == nil) {
+            print("USBDevice: USBBackend didn't acquire the InterfaceInterface yet...")
+            return false
+        }
+        kr = USBBackend.tegraInterfaceInterface!.WritePipe(
+            USBBackend.tegraInterfaceInterfacePtrPtr,
+            endpointPipeRef,
+            &buffer,
+            UInt32(buffer.count)
+        )
+        if (!KernelSucceeded(kernelReturn: kr)) {
+            print("USBDevice: Failed to write. Error code: \(kr)")
+            return false
+        }
+        
+        return true
     }
 }

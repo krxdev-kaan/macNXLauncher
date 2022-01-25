@@ -122,11 +122,12 @@ class ViewController: NSViewController {
         USBDevice.claimInterface(interfaceNum: 0)
         TegraDevice.getTegraReadWriteEndpoints()
         
-        let deviceId: [UInt8] = TegraDevice.readDeviceId()
-        if (!deviceId.allSatisfy({ $0 == 0 })) {
+        let (didSucceed, deviceId): (Bool, [UInt8]) = TegraDevice.readDeviceId()
+        if (!didSucceed) {
             print("ERROR: failed to read DeviceID.")
             return
         }
+        print("Device ID acquired: \(deviceId)")
     }
 }
 

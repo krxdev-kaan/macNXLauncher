@@ -57,15 +57,47 @@ public class TegraDevice {
         }
     }
     
-    static func readDeviceId () -> [UInt8] {
+    static func readDeviceId () -> (Bool, [UInt8]) {
         var buffer: [UInt8] = [UInt8](repeating: 0, count: 16)
         
-        USBDevice.read(
+        let r: Bool = USBDevice.read(
             endpointPipeRef: readPipeRef,
             returnBuffer: &buffer,
             len: 16
         )
         
-        return buffer
+        return (r, buffer)
+    }
+    
+    static func writePayloadToDevice (data: [UInt8]) -> (Bool, Int) {
+        var dataRemaining: Int = data.count
+        var cycles: Int = 0
+        let maxPacketSize: Int = 0x1000
+        
+        var currentOffset: Int = 0
+        while (dataRemaining > 0) {
+            let chunkLength: Int = min(dataRemaining, maxPacketSize)
+            dataRemaining -= chunkLength
+            
+            if (currentOffset >= data.count) {
+                break
+            }
+            
+            let chunk: [UInt8] = Array(data[currentOffset..<chunkLength + currentOffset])
+            currentOffset += chunkLength
+            
+            let r: Bool = USBDevice.write(
+                endpointPipeRef: writePipeRef,
+                bufferToWrite: chunk
+            )
+            if (!r) {
+                print("TegraDevice: Failed to write chunk.")
+                return (false, 0)
+            }
+            
+            cycles += 1
+        }
+        
+        return (true, cycles)
     }
 }
