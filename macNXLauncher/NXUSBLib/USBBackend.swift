@@ -137,10 +137,12 @@ public class USBBackend {
             }
             kr = tegraDeviceInterface!.GetDeviceVendor(tegraDeviceInterfacePtrPtr, &vid)
             if (!KernelSucceeded(kernelReturn: kr) || vid != nxVendorID) {
+                print("USBBackend: Device VID check-up failed. Error code: \(kr)")
                 continue
             }
             kr = tegraDeviceInterface!.GetDeviceProduct(tegraDeviceInterfacePtrPtr, &pid)
             if (!KernelSucceeded(kernelReturn: kr) || pid != nxProductId) {
+                print("USBBackend: Device PID check-up failed. Error code: \(kr)")
                 continue
             }
             
@@ -176,6 +178,8 @@ public class USBBackend {
             }
             tegraDeviceInterfacePtrPtr = nil
             tegraDeviceInterface = nil
+            tegraInterfaceInterfacePtrPtr = nil
+            tegraInterfaceInterface = nil
             
             NotificationCenter.default.post(
                 name: .TegraDeviceDisconnected,

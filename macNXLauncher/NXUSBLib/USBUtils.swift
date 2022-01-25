@@ -9,10 +9,10 @@
 import Foundation
 import IOKit
 
-func KernelSucceeded(kernelReturn: kern_return_t) -> Bool {
+func KernelSucceeded (kernelReturn: kern_return_t) -> Bool {
     return kernelReturn == kIOReturnSuccess
 }
 
-func KernelSucceededPlus(kernelReturn: kern_return_t) -> Bool {
+func KernelSucceededPlus (kernelReturn: kern_return_t) -> Bool {
     return kernelReturn == kIOReturnSuccess || kernelReturn == kIOReturnExclusiveAccess
 }

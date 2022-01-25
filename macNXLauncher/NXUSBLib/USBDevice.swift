@@ -22,13 +22,17 @@ public class USBDevice {
             bAlternateSetting: UInt16(kIOUSBFindInterfaceDontCare)
         )
         
+        if (USBBackend.tegraDeviceInterface == nil) {
+            print("USBDevice: USBBackend didn't acquire the Device Interface yet...")
+            return
+        }
         kr = USBBackend.tegraDeviceInterface!.CreateInterfaceIterator(
             USBBackend.tegraDeviceInterfacePtrPtr,
             &subInterfaceReq,
             &subInterface
         )
         interfaceService = IOIteratorNext(subInterface)
-        while(interfaceService != 0) {
+        while (interfaceService != 0) {
             let interfaceReferance: Unmanaged<CFTypeRef>! = IORegistryEntryCreateCFProperty(
                 interfaceService,
                 "bInterfaceNumber" as CFString,
@@ -85,5 +89,43 @@ public class USBDevice {
             print("USBDevice: InterfaceInterface failed to open. Error code: \(kr)")
             return
         }
+        
+        var vid: UInt16 = 0
+        var pid: UInt16 = 0
+        kr = USBBackend.tegraInterfaceInterface!.GetDeviceVendor(USBBackend.tegraInterfaceInterfacePtrPtr, &vid)
+        if (!KernelSucceeded(kernelReturn: kr) || vid != USBBackend.nxVendorID) {
+            print("USBDevice: Device VID check-up failed. Error code: \(kr)")
+            return
+        }
+        kr = USBBackend.tegraInterfaceInterface!.GetDeviceProduct(USBBackend.tegraInterfaceInterfacePtrPtr, &pid)
+        if (!KernelSucceeded(kernelReturn: kr) || pid != USBBackend.nxProductId) {
+            print("USBDevice: Device PID check-up failed. Error code: \(kr)")
+            return
+        }
+        
+        print("USBDevice: Claimed Interface.")
+    }
+    
+    static func read (endpointPipeRef: UInt8, returnBuffer: inout [UInt8], len: Int) {
+        var kr: Int32 = 0
+        var buffer: [UInt8] = [UInt8](repeating: 0, count: len)
+        var length: UInt32 = UInt32(buffer.count)
+        
+        if (USBBackend.tegraInterfaceInterface == nil) {
+            print("USBDevice: USBBackend didn't acquire the InterfaceInterface yet...")
+            return
+        }
+        kr = USBBackend.tegraInterfaceInterface!.ReadPipe(
+            USBBackend.tegraInterfaceInterfacePtrPtr,
+            endpointPipeRef,
+            &buffer,
+            &length
+        )
+        if (!KernelSucceeded(kernelReturn: kr)) {
+            print("USBDevice: Failed to read. Error code: \(kr)")
+            return
+        }
+        
+        returnBuffer = buffer
     }
 }
