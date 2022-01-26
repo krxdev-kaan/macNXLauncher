@@ -31,7 +31,10 @@ class SaveSystem
     static func retrieveAtIndex(index: Int) -> Payload
     {
         let saveArr = retrieveAndUpdate()
-        return saveArr[index]
+        if (index != -1) {
+            return saveArr[index]
+        }
+        return Payload(directory: nil, name: nil)
     }
     
     static func push(el: Payload)

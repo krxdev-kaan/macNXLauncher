@@ -10,6 +10,8 @@
 		BB486CEF2794824700813CF4 /* USBBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB486CEE2794824700813CF4 /* USBBackend.swift */; };
 		BB537D00279EE53800B326BE /* TegraDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB537CFF279EE53800B326BE /* TegraDevice.swift */; };
 		BB537D02279EE81900B326BE /* USBDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB537D01279EE81900B326BE /* USBDevice.swift */; };
+		BB537D0627A1272300B326BE /* Intermezzo.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB537D0527A1272300B326BE /* Intermezzo.swift */; };
+		BB56B6DD27A13E1900E2DB88 /* NXPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB56B6DC27A13E1900E2DB88 /* NXPayload.swift */; };
 		BB6AA91923AE35C4000DF6C5 /* SaveSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */; };
 		BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */; };
 		BB9867FA23ABCD860058F6F8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9867F923ABCD860058F6F8 /* AppDelegate.swift */; };
@@ -24,6 +26,8 @@
 		BB486CEE2794824700813CF4 /* USBBackend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBBackend.swift; sourceTree = "<group>"; };
 		BB537CFF279EE53800B326BE /* TegraDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TegraDevice.swift; sourceTree = "<group>"; };
 		BB537D01279EE81900B326BE /* USBDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBDevice.swift; sourceTree = "<group>"; };
+		BB537D0527A1272300B326BE /* Intermezzo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Intermezzo.swift; sourceTree = "<group>"; };
+		BB56B6DC27A13E1900E2DB88 /* NXPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NXPayload.swift; sourceTree = "<group>"; };
 		BB6AA91823AE35C4000DF6C5 /* SaveSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveSystem.swift; sourceTree = "<group>"; };
 		BB6AA91A23AE35D2000DF6C5 /* PayloadObj.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayloadObj.swift; sourceTree = "<group>"; };
 		BB9867F623ABCD860058F6F8 /* macNXLauncher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macNXLauncher.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +61,15 @@
 			path = SaveSystem;
 			sourceTree = "<group>";
 		};
+		BB537D0427A126B800B326BE /* NXPayloadUtils */ = {
+			isa = PBXGroup;
+			children = (
+				BB537D0527A1272300B326BE /* Intermezzo.swift */,
+				BB56B6DC27A13E1900E2DB88 /* NXPayload.swift */,
+			);
+			path = NXPayloadUtils;
+			sourceTree = "<group>";
+		};
 		BB9867ED23ABCD860058F6F8 = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +89,7 @@
 		BB9867F823ABCD860058F6F8 /* macNXLauncher */ = {
 			isa = PBXGroup;
 			children = (
+				BB537D0427A126B800B326BE /* NXPayloadUtils */,
 				BB537D03279F1F0E00B326BE /* SaveSystem */,
 				BBD25385279E1B1100FD6621 /* NXUSBLib */,
 				BB9867F923ABCD860058F6F8 /* AppDelegate.swift */,
@@ -174,6 +188,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB537D0627A1272300B326BE /* Intermezzo.swift in Sources */,
+				BB56B6DD27A13E1900E2DB88 /* NXPayload.swift in Sources */,
 				BB9867FC23ABCD860058F6F8 /* ViewController.swift in Sources */,
 				BB486CEF2794824700813CF4 /* USBBackend.swift in Sources */,
 				BB6AA91B23AE35D2000DF6C5 /* PayloadObj.swift in Sources */,

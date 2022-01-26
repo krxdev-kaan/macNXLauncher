@@ -122,12 +122,19 @@ class ViewController: NSViewController {
         USBDevice.claimInterface(interfaceNum: 0)
         TegraDevice.getTegraReadWriteEndpoints()
         
-        let (didSucceed, deviceId): (Bool, [UInt8]) = TegraDevice.readDeviceId()
-        if (!didSucceed) {
-            print("ERROR: failed to read DeviceID.")
+        let (didSucceedR, deviceId): (Bool, [UInt8]) = TegraDevice.readDeviceId()
+        if (!didSucceedR) {
+            print("ERROR: Failed to read DeviceID.")
             return
         }
         print("Device ID acquired: \(deviceId)")
+        
+        let payload: Payload = SaveSystem.retrieveAtIndex(index: selectedPayload)
+        let (didSucceedP, payloadData): (Bool, [UInt8]) = NXPayload.createPayloadData(payload: payload)
+        if (!didSucceedP) {
+            print("ERROR: failed to create payload.")
+            return
+        }
     }
 }
 

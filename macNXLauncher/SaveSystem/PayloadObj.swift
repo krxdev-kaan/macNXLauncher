@@ -10,6 +10,6 @@ import Foundation
 
 struct Payload : Codable
 {
-    let directory : String?
-    let name : String?
+    let directory: String?
+    let name: String?
 }

@@ -172,9 +172,17 @@ public class USBBackend {
                 continue
             }
             
-            rr = tegraDeviceInterface!.Release(tegraDeviceInterfacePtrPtr)
-            if (rr != 0) {
-                print("USBBackend: USB Device Interface failed to release. Error code: \(rr)")
+            if (tegraDeviceInterface != nil) {
+                rr = tegraDeviceInterface!.Release(tegraDeviceInterfacePtrPtr)
+                if (rr != 0) {
+                    print("USBBackend: USB Device Interface failed to release. Error code: \(rr)")
+                }
+            }
+            if (tegraInterfaceInterface != nil) {
+                rr = tegraInterfaceInterface!.Release(tegraInterfaceInterfacePtrPtr)
+                if (rr != 0) {
+                    print("USBBackend: USB InterfaceInterface failed to release. Error code: \(rr)")
+                }
             }
             tegraDeviceInterfacePtrPtr = nil
             tegraDeviceInterface = nil
