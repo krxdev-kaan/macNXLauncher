@@ -132,9 +132,31 @@ class ViewController: NSViewController {
         let payload: Payload = SaveSystem.retrieveAtIndex(index: selectedPayload)
         let (didSucceedP, payloadData): (Bool, [UInt8]) = NXPayload.createPayloadData(payload: payload)
         if (!didSucceedP) {
-            print("ERROR: failed to create payload.")
+            print("ERROR: Failed to create payload.")
             return
         }
+        
+        let (didSucceedW, cycles): (Bool, Int) = TegraDevice.writePayloadToDevice(data: payloadData)
+        if (!didSucceedW) {
+            print("ERROR: Failed to write payload.")
+            return
+        }
+        
+        if (cycles % 2 != 1) {
+            let didSucceedS: Bool = TegraDevice.switchToHigherBuffer()
+            if (!didSucceedS) {
+                print("ERROR: Failed switching to higher buffer.")
+                return
+            }
+        }
+        
+        let didSucceedT: Bool = TegraDevice.triggerVulnerability()
+        if (!didSucceedT) {
+            print("ERROR: Failed to trigger vulnerability.")
+            return
+        }
+        
+        print("Successfully Smashed !!!")
     }
 }
 

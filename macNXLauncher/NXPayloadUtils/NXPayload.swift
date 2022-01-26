@@ -45,7 +45,6 @@ public class NXPayload {
         
         let sprayCount: Int = Int((STACK_SPRAY_END - STACK_SPRAY_START) / 4)
         for _ in 0..<sprayCount {
-            print(withUnsafeBytes(of: RCM_PAYLOAD_ADDR.littleEndian, Array.init))
             payload.append(contentsOf: withUnsafeBytes(of: RCM_PAYLOAD_ADDR.littleEndian, Array.init))
         }
         
