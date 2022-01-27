@@ -12,30 +12,21 @@ import IOKit
 import IOKit.usb
 
 class ViewController: NSViewController {
-    @IBOutlet weak var fileDialogButton: NSButton!
-    @IBOutlet weak var fileDirectoryTextField: NSTextField!
     @IBOutlet weak var rcmStateView: NSColorWell!
     @IBOutlet weak var payloadListHeader: NSTableHeaderView!
     @IBOutlet weak var payloadListView: NSTableView!
     
-    var pathToFusee : String!
     var selectedPayload = -1
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        pathToFusee = UserDefaults.standard.string(forKey: "fuseeDir") ?? ""
-        fileDirectoryTextField.stringValue = pathToFusee
         
-        setupPayloadList()
+        payloadListView.sizeLastColumnToFit()
+        payloadListView.delegate = self
+        payloadListView.dataSource = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.devicePluggedIn), name: .TegraDeviceConnected, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.deviceRemoved), name: .TegraDeviceDisconnected, object: nil)
-    }
-    
-    func setupPayloadList()
-    {
-        payloadListView.delegate = self
-        payloadListView.dataSource = self
     }
     
     @objc func devicePluggedIn(notification: NSNotification)
@@ -50,37 +41,6 @@ class ViewController: NSViewController {
         DispatchQueue.main.async {
             self.rcmStateView.color = NSColor(red: 0.7, green: 0.0, blue: 0.0, alpha: 1.0)
         }
-    }
-    
-    @IBAction func browseForFusee(sender: AnyObject) {
-        
-        let dialog = NSOpenPanel();
-        
-        dialog.title                   = "Locate and Choose FuseeGelee Folder";
-        dialog.showsResizeIndicator    = true;
-        dialog.showsHiddenFiles        = false;
-        dialog.canChooseDirectories    = true;
-        dialog.canCreateDirectories    = false;
-        dialog.allowsMultipleSelection = false;
-        dialog.canChooseFiles = false;
-
-        if (dialog.runModal() == NSApplication.ModalResponse.OK)
-        {
-            let result = dialog.url
-            
-            if (result != nil)
-            {
-                let path = result!.path
-                fileDirectoryTextField.stringValue = path
-                pathToFusee = path
-                UserDefaults.standard.set(pathToFusee, forKey: "fuseeDir")
-            }
-        }
-        else
-        {
-            return
-        }
-        
     }
     
     @IBAction func browseForPayload(sender: AnyObject) {
